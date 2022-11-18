@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+article {
+    background-color: lightblue;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+.categories {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.category {
+    border: solid black 1px;
+    border-radius: 5px;
+    padding:10px;
+    cursor: pointer;
+}
+
+.category:hover {
+    background-color: lightblue;
+}
+
+span > a {
+    text-decoration: none;
+}
+
