@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 use App\Models\Post;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +16,9 @@ use App\Models\Post;
 |
 */
 
-Route::get('/{category?}', function ($category = null) {
-    $posts = Post::all(); 
-    $categories = $posts->pluck('category');
-    if (isset($category)) {
-        $posts = Post::all()->where('category', '=', $category); 
-    };
+Route::get('/', function () {
     return view('posts', [
-        'posts'=> $posts,
-        'categories' => $categories
+        'posts'=> Post::latest()->with('category', 'author')->get(),
     ]);
 });
 
@@ -30,3 +26,17 @@ Route::get('/{category?}', function ($category = null) {
 Route::get('/post/{post}', function (Post $post) { //route model binding
    return view('post', [ 'post' => $post ]);
 })->whereNumber('postId');
+
+
+Route::get('/categories/{category:slug}', function (Category $category) { 
+    return view('category', [ 
+        'posts' => $category->posts,
+        'name' => $category->name
+    ]);
+ });
+
+ Route::get('/authors/{author:username}', function (User $author) { 
+    return view('posts', [ 
+        'posts'=> $author->posts
+    ]);
+ });
