@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use \App\Models\User;
 use \App\Models\Post;
 use \App\Models\Category;
+use App\Models\Comment;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,75 +17,87 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-      $user = User::factory()->create([
+
+      User::query()->delete();
+      Post::query()->delete();
+      Category::query()->delete();
+      Comment::query()->delete();
+
+      $firstUser = User::factory()->create([
          'name' => 'mejdi',
-         'username' =>'mejdi5'
+         'username' =>'mejdi5',
+         'email' => 'mejdi@gmail.com',
+         'password' => bcrypt('abcdefgh')
       ]);
-      Post::factory(5)->create([
-         'user_id' => $user->id
+
+      $secondUser = User::factory()->create([
+         'name' => 'ahmed',
+         'username' =>'ahmed123',
+         'email' => 'ahmed@gmail.com',
+         'password' => bcrypt('abcdefgh')
       ]);
-      /*
-        User::truncate();
-        Post::truncate();
-        Category::truncate();
 
-        $user = User::factory()->create([
-         'name' => 'mejdi',
-         'email'=> 'mejdi@gmail.com',
-          'password' => bcrypt('abcdefgh')
-        ]);
+      $thirdUser = User::factory()->create([
+         'name' => 'mohamed',
+         'username' =>'mohamed123',
+         'email' => 'mohamed@gmail.com',
+         'password' => bcrypt('abcdefgh')
+      ]);
 
-        $sports = Category::create([
-           'name' => 'SPORTS',
-           'slug' => 'sports',
-        ]);
+      $sports = Category::create([
+         'name' => 'SPORTS',
+         'slug' => 'sports',
+      ]);
 
-        $news = Category::create([
-            'name' => 'NEWS',
-            'slug' => 'news',
-         ]);
+      $news = Category::create([
+          'name' => 'NEWS',
+          'slug' => 'news',
+       ]);
 
-         $history = Category::create([
-            'name' => 'HISTORY',
-            'slug' => 'history',
-         ]);
+       $science = Category::create([
+          'name' => 'SCIENCE',
+          'slug' => 'science',
+       ]);
 
-         $science = Category::create([
-            'name' => 'SCIENCE',
-            'slug' => 'science',
-         ]);
 
-         POST::create([
-            'user_id' => $user->id,
-            'category_id' => $sports->id,
-            'title' => 'first post',
-            'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'body'=> 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam est ipsa, molestiae officia laboriosam impedit. Sequi in odio quae quo obcaecati facere saepe, tempora vero impedit mollitia libero quam laborum.'
-         ]);
+      $firstUserPosts = Post::factory(3)->create([
+         'user_id' => $firstUser->id,
+         'category_id' => $news->id
+      ]);
 
-         POST::create([
-            'user_id' => $user->id,
-            'category_id' => $news->id,
-            'title' => 'second post',
-            'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'body'=> 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam est ipsa, molestiae officia laboriosam impedit. Sequi in odio quae quo obcaecati facere saepe, tempora vero impedit mollitia libero quam laborum.'
-         ]);
+      $secondUserPost = Post::factory()->create([
+         'user_id' => $secondUser->id,
+         'category_id' => $sports->id
+      ]);
 
-         POST::create([
-            'user_id' => $user->id,
-            'category_id' => $science->id,
-            'title' => 'third post',
-            'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'body'=> 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam est ipsa, molestiae officia laboriosam impedit. Sequi in odio quae quo obcaecati facere saepe, tempora vero impedit mollitia libero quam laborum.'
-         ]);
+      $thirdUserPost = Post::factory()->create([
+         'user_id' => $thirdUser->id,
+         'category_id' => $science->id
+      ]);
 
-         POST::create([
-            'user_id' => $user->id,
-            'category_id' => $history->id,
-            'title' => 'fourth post',
-            'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'body'=> 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam est ipsa, molestiae officia laboriosam impedit. Sequi in odio quae quo obcaecati facere saepe, tempora vero impedit mollitia libero quam laborum.'
-         ]);
-         */
+      Comment::factory()->create([
+         'user_id' => $secondUser->id,
+         'post_id' =>  $firstUserPosts[0]->id
+      ]);
+
+      Comment::factory()->create([
+         'user_id' => $thirdUser->id,
+         'post_id' =>  $firstUserPosts[0]->id
+      ]);
+
+      Comment::factory()->create([
+         'user_id' => $thirdUser->id,
+         'post_id' =>  $firstUserPosts[1]->id
+      ]);
+
+      Comment::factory()->create([
+         'user_id' => $firstUser->id,
+         'post_id' =>  $thirdUserPost->id
+      ]);
+
+      Comment::factory()->create([
+         'user_id' => $thirdUser->id,
+         'post_id' =>  $secondUserPost->id
+      ]);
     }
 }
